@@ -1,0 +1,113 @@
+#!/bin/bash
+#instalasi Web Server For Raspberry Project CBT Use Nginx
+#Jika Ada kesalahan, silahkan langsung hubungi saya@rifky.tech 
+#SysAdmin : Muhammad Rifky Abimayu 
+#Visit : https://www.mexious.net
+
+
+
+#install nginx web server
+sudo apt-get -y install nginx
+
+#install php7.0
+sudo apt-get -y install php php7.0-fpm
+
+#nginx.conf
+sudo rm -rf /etc/nginx/nginx.conf
+sudo cp -r nginx.conf /etc/nginx/
+
+#sites-available
+sudo rm -r /etc/nginx/sites-available/default
+sudo cp -r default /etc/nginx/sites-available/
+
+#reload nginx
+sudo service nginx reload
+
+#php.ini konfiguration
+sudo rm -rf /etc/php/7.0/fpm/php.ini
+sudo cp -r php.ini /etc/php/7.0/fpm/
+
+
+#reload php-fpm
+sudo service php7.0-fpm reload
+
+#creat phpinfo
+sudo cp -r info.php /var/www/html/
+
+#Install mysql
+sudo apt-get -y install mysql-server mysql-client
+
+
+echo "#########################################################################################################################"
+echo " "
+echo " "
+echo " "
+echo " Pada Install phpmyadmin, berikut ada 2 pilihan opsi :
+              - pada opsi (Web Server to reconfigure automatically) : <-- Kosongkan
+              Saja Dengan Menekan TAB lalu Ok
+              - pada opsi (Configure database for phpmyadmin with dbconfig-common) <--Pilih
+              No "
+
+echo " "
+echo " "
+echo " "
+echo "#########################################################################################################################"
+
+#Install phpMyAdmin
+sudo apt-get -y install phpmyadmin
+
+#Reload Nginx 
+sudo service nginx reload
+
+#link phpmyadmin to root document
+sudo ln -s /usr/share/phpmyadmin /var/www/html
+
+#Install Mysql Dengan Password
+sudo mysql_secure_installation
+
+#Refresh History
+sudo rm -rf /home/pi/.bash_history
+sudo cp -r bash_history /home/pi/.bash_history
+
+#Install Vsftpd
+sudo chown -R pi /var/www/html
+sudo apt-get -y install vsftpd
+sudo rm -rf /etc/vsftpd.conf
+sudo cp -r vsftpd.conf /etc/
+
+#rc.local agar start ssh
+sudo rm -rf /etc/rc.local
+sudo cp -r rc.local /etc
+sudo chmod +x /etc/rc.local
+#Set Waktu Di Raspberry pi
+#sudo date -s "22 FEB 2018 17:30:30"
+
+
+echo "#########################################################################################################################"
+echo " "
+echo " "
+echo " "
+echo " Langkah ini harus dilakukan, yaitu 
+      - masuk sebagai root, lalu ketik "mysql -u root"
+      - masukan perintah berikut di mysql :
+      
+      use mysql;
+      update user set plugin='' where User='root';
+      flush privileges;
+      exit;
+
+      jika sudah, berikut list tested nya :
+      - http://localhost/info.php <-- untuk cek bahwa php telah terinstall
+      - http://localhost/phpmyadmin <-- untuk cek bahwa phpmyadmin telah terinstall
+      
+      Login phpmyadmin nya gunakan :
+      user : root
+      pass : (sesuai dengan kamu buat)
+     
+     "  
+      
+echo "Terima Kasih,.. Menemukan Error Perintah ? send feedback : saya@rifky.tech"
+echo " "
+echo " "
+echo " "
+echo "#########################################################################################################################"
